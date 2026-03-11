@@ -1,11 +1,8 @@
-import './App.css'
-
 function App() {
 
   return (
-    <>
-      
-    </>
+    <main className="w-full bg-gray-200 min-h-screen">
+    </main>
   )
 }
 
