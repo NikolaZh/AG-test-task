@@ -22,13 +22,13 @@ const fetchGoods = async (url: string) => {
 };
 
 
-const composeURI = ({ limit, page, search, sortBy, order }: { limit: number, page: number, search?: string, sortBy?: string, order?: "asc" | "desc" }) => {
+const composeURI = ({ limit, skip, search, sortBy, order }: { limit: number, skip: number, search?: string, sortBy?: string, order?: "asc" | "desc" }) => {
     const endpoint = search ?
         `${import.meta.env.VITE_PRODUCTS_ENDPOINT}/search?q=${search}` :
         `${import.meta.env.VITE_PRODUCTS_ENDPOINT}?`;
     const sortParam = sortBy ? `&sortBy=${sortBy}&order=${order}` : "";
 
-    return `${endpoint}&limit=${limit}&skip=${page - 1}${sortParam}`
+    return `${endpoint}&limit=${limit}&skip=${skip}${sortParam}`
 }
 
 const ProductsPage = () => {
@@ -38,7 +38,7 @@ const ProductsPage = () => {
     const [sort, setSort] = useState<{ sortBy: string; order: "asc" | "desc" } | undefined>()
 
     const { data, error, isLoading, mutate } = useSWR<ProductsResponse>(
-        composeURI({ limit: PER_PAGE, page, search: debouncedSearch, sortBy: sort?.sortBy, order: sort?.order }),
+        composeURI({ limit: PER_PAGE, skip: (page - 1) * PER_PAGE, search: debouncedSearch, sortBy: sort?.sortBy, order: sort?.order }),
         fetchGoods
     );
 
