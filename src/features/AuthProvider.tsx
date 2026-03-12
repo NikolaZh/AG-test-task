@@ -1,20 +1,10 @@
 import { createContext, useState } from "react";
 import useSWRMutation from "swr/mutation";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useSessionStorage } from "../hooks/useSessionStorage";
+import type { UserData } from "@/types";
 
-interface UserData {
-    id: number,
-    username: string,
-    email: string,
-    firstName: string,
-    lastName: string,
-    gender: string,
-    image: string,
-    accessToken: string,
-    refreshToken: string
-}
-
-interface LoginParams {
+export interface LoginParams {
     username: string;
     password: string;
     remember: boolean;
@@ -60,14 +50,15 @@ type AuthProviderProps = {
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
     const [userLocalData, setUserLocalData, removeUserLocalData] = useLocalStorage<UserData | undefined>("user", undefined)
-    const [userSessionData, setUserSessionData, removeUserSessionData] = useLocalStorage<UserData | undefined>("user", undefined)
+    const [userSessionData, setUserSessionData, removeUserSessionData] = useSessionStorage<UserData | undefined>("user", undefined)
     const [token, setToken] = useState<string>(userSessionData?.accessToken || userLocalData?.accessToken || "");
     const [fetchError, setFetchError] = useState<string>();
 
-    const { data, error, trigger, isMutating } = useSWRMutation<UserData, string, string, { token: string; creds: { username: string; password: string } }>(import.meta.env.VITE_AUTH_ENDPOINT as string, fetchAuth)
+    const { error, trigger, isMutating } = useSWRMutation<UserData, string, string, { token: string; creds: { username: string; password: string } }>(import.meta.env.VITE_AUTH_ENDPOINT as string, fetchAuth)
 
     const handleLogin = async ({ username, password, remember }: LoginParams) => {
         setFetchError("")
+
         try {
             const res = await trigger({ token, creds: { username, password } })
 
@@ -76,8 +67,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             } else {
                 setUserSessionData(res)
             }
-
-            console.log(res)
+            setToken(res.accessToken)
         } catch (error) {
             setFetchError("Unknown network Error")
         }

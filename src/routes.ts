@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import Auth from "./pages/Auth";
-import Goods from "./pages/Goods";
+import Products from "./pages/Products";
 import ProtectedRoute from "./features/ProtectedRoute";
 
 const router = createBrowserRouter([
@@ -9,12 +9,12 @@ const router = createBrowserRouter([
         Component: Auth,
     },
     {
-        path: "goods",
+        path: "products",
         Component: ProtectedRoute,
         children: [
             {
                 index: true,
-                Component: Goods,
+                Component: Products,
             },
         ],
     },

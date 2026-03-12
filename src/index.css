@@ -6,40 +6,13 @@
 ---break--- */
 @custom-variant dark (&:is(.dark *));
 
-/* 
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-} */
-
-/* 
----break--- */
-
 :root {
 
     --background: oklch(1 0 0);
 
     --foreground: oklch(0.145 0 0);
 
-    --card: oklch(1 0 0);
+    --card: #F3F3F3;
 
     --card-foreground: oklch(0.145 0 0);
 
@@ -47,7 +20,9 @@ body {
 
     --popover-foreground: oklch(0.145 0 0);
 
-    --primary: oklch(0.205 0 0);
+    --primary: #242EDB;
+
+    --primary-hover: #2427dbd4;
 
     --primary-foreground: oklch(0.985 0 0);
 
@@ -57,7 +32,7 @@ body {
 
     --muted: oklch(0.97 0 0);
 
-    --muted-foreground: oklch(0.556 0 0);
+    --muted-foreground: #C4C4C4;
 
     --accent: oklch(0.97 0 0);
 
