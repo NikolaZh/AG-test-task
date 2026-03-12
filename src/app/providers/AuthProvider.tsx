@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import useSWRMutation from "swr/mutation";
-import { useLocalStorage } from "../hooks/useLocalStorage";
-import { useSessionStorage } from "../hooks/useSessionStorage";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { useSessionStorage } from "../../hooks/useSessionStorage";
 import type { UserData } from "@/types";
 
 export interface LoginParams {

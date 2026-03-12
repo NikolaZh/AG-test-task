@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "../hooks/useDebounce";
 import AddProductForm from "../features/AddProductForm/AddProductForm";
-import ProductsTable from "../features/ProductsTable/ProductsTable";
-import Pagination from "../features/Pagination/Pagination";
+import ProductsTable from "../widgets/ProductsTable/ProductsTable";
+import Pagination from "../widgets/Pagination/Pagination";
 import type { ProductsResponse } from "@/types";
 
 const PER_PAGE = 5;
