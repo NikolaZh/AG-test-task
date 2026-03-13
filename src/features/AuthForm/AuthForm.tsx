@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import logo from "@/src/assets/logo.svg"
 import { authSchema, type AuthFormValues } from "./schema";
-import type { LoginParams } from "../AuthProvider";
+import type { LoginParams } from "../../app/providers/AuthProvider";
 
 const PasswordToggleButton = ({ visible, onClick }: { visible: boolean; onClick: () => void; }) =>
     <button
