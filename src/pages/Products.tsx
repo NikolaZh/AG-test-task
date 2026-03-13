@@ -3,33 +3,14 @@ import useSWR from "swr";
 import { RefreshCw, Search, } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useDebounce } from "../hooks/useDebounce";
+import { useDebounce } from "../shared/hooks/useDebounce";
 import AddProductForm from "../features/AddProductForm/AddProductForm";
 import ProductsTable from "../widgets/ProductsTable/ProductsTable";
 import Pagination from "../widgets/Pagination/Pagination";
 import type { ProductsResponse } from "@/types";
+import { buildProductsUrl, fetchProducts } from "../api/products";
 
 const PER_PAGE = 5;
-
-const fetchGoods = async (url: string) => {
-    const res = await fetch(url)
-
-    if (!res.ok) {
-        throw new Error(`Request failed: ${res.status}`);
-    }
-
-    return res.json();
-};
-
-
-const composeURI = ({ limit, skip, search, sortBy, order }: { limit: number, skip: number, search?: string, sortBy?: string, order?: "asc" | "desc" }) => {
-    const endpoint = search ?
-        `${import.meta.env.VITE_PRODUCTS_ENDPOINT}/search?q=${search}` :
-        `${import.meta.env.VITE_PRODUCTS_ENDPOINT}?`;
-    const sortParam = sortBy ? `&sortBy=${sortBy}&order=${order}` : "";
-
-    return `${endpoint}&limit=${limit}&skip=${skip}${sortParam}`
-}
 
 const ProductsPage = () => {
     const [page, setPage] = useState(1);
@@ -37,10 +18,16 @@ const ProductsPage = () => {
     const debouncedSearch = useDebounce(search, 700);
     const [sort, setSort] = useState<{ sortBy: string; order: "asc" | "desc" } | undefined>()
 
-    const { data, error, isLoading, mutate } = useSWR<ProductsResponse>(
-        composeURI({ limit: PER_PAGE, skip: (page - 1) * PER_PAGE, search: debouncedSearch, sortBy: sort?.sortBy, order: sort?.order }),
-        fetchGoods
-    );
+    const productsUrl = buildProductsUrl({
+        baseUrl: import.meta.env.VITE_PRODUCTS_ENDPOINT,
+        limit: PER_PAGE,
+        skip: (page - 1) * PER_PAGE,
+        q: debouncedSearch,
+        sortBy: sort?.sortBy,
+        order: sort?.order,
+    });
+
+    const { data, error, isLoading, mutate } = useSWR<ProductsResponse>(productsUrl, fetchProducts);
 
     const sortHandler = (key: string) => {
         setPage(1);

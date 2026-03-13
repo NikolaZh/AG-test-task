@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router';
-import useAuth from '../../hooks/useAuth';
+import useAuth from '../../shared/hooks/useAuth';
 
 const ProtectedRoute = () => {
     const { token } = useAuth();

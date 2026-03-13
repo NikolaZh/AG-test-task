@@ -1,35 +1,15 @@
 import { createContext, useState } from "react";
 import useSWRMutation from "swr/mutation";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { useSessionStorage } from "../../hooks/useSessionStorage";
+import { useLocalStorage } from "../../shared/hooks/useLocalStorage";
+import { useSessionStorage } from "../../shared/hooks/useSessionStorage";
 import type { UserData } from "@/types";
+import { cleanBaseUrl, fetchAuth } from "../../api/auth";
 
 export interface LoginParams {
     username: string;
     password: string;
     remember: boolean;
 }
-
-const fetchAuth = async (url: string, { arg }: { arg: { token: string; creds: { username: string; password: string } } }) => {
-    const res = await fetch(url, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${arg.token}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            username: arg.creds.username,
-            password: arg.creds.password,
-        }),
-    });
-
-    if (!res.ok) {
-        throw new Error(`Request failed: ${res.status}`);
-    }
-
-    return res.json();
-};
-
 
 export const AuthContext = createContext<{
     token: string;
@@ -54,13 +34,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const [token, setToken] = useState<string>(userSessionData?.accessToken || userLocalData?.accessToken || "");
     const [fetchError, setFetchError] = useState<string>();
 
-    const { error, trigger, isMutating } = useSWRMutation<UserData, string, string, { token: string; creds: { username: string; password: string } }>(import.meta.env.VITE_AUTH_ENDPOINT as string, fetchAuth)
+    const baseUrl = cleanBaseUrl(import.meta.env.VITE_AUTH_ENDPOINT);
+
+    const { error, trigger, isMutating } = useSWRMutation<UserData, string, string, { creds: { username: string; password: string } }>(baseUrl, fetchAuth)
 
     const handleLogin = async ({ username, password, remember }: LoginParams) => {
         setFetchError("")
 
         try {
-            const res = await trigger({ token, creds: { username, password } })
+            const res = await trigger({ creds: { username, password } })
 
             if (remember) {
                 setUserLocalData(res)

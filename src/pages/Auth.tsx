@@ -1,5 +1,5 @@
 import { Navigate } from "react-router";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../shared/hooks/useAuth";
 import AuthForm from "../features/AuthForm/AuthForm";
 
 const Auth = () => {
